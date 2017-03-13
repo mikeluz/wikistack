@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <!-- <h3>{{title}}<small> (<a href="{{urlTitle}}/similar">Similar</a>)</small></h3> -->
+  <h4>by {{ user.name }}</h4>
+  <hr/>
+  <div>{{ user.email }}</div>
+  <hr/>
+  <div class="page-body">
+    {% for page in pages %}
+      <li><a href="/wiki/{{page.urlTitle}}">{{page.title}}</a></li>
+    {% endfor %}
+  </div>
+  <hr/>
+
+  <!-- <a href="{{urlTitle}}/edit" class="btn btn-primary">edit this page</a>
+  <a href="{{urlTitle}}/delete" class="btn btn-danger">delete this page</a> -->
+{% endblock %}

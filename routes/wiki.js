@@ -10,6 +10,10 @@ wikiRouter.get('/add', function(req, res) {
 	res.render('addpage');
 });
 
+wikiRouter.get('/', function(req, res) {
+	res.redirect('/');
+});
+
 wikiRouter.post('/', function(req, res, next) {
 	// 	res.json(req.body);
 
@@ -33,20 +37,62 @@ wikiRouter.post('/', function(req, res, next) {
 });
 
 wikiRouter.get('/:urlTitle', function(req, res, next) {
-  // res.send("Working GET ALL");
-  Page.findOne({
+	Page.findOne({
     where: {
-      urlTitle: req.params.urlTitle
+        urlTitle: req.params.urlTitle
+    },
+    include: [
+        {model: User, as: 'author'}
+    ]
+})
+.then(function (page) {
+    // page instance will have a .author property
+    // as a filled in user object ({ name, email })
+    if (page === null) {
+        res.status(404).send();
+    } else {
+        res.render('wikipage', {
+            page: page
+        });
     }
-  }).then(function(page) {
-    // res.json(page);
-		res.render('wikipage', {
-			page: page,
-			title: page.title,
-			urlTitle: page.urlTitle,
-			content: page.content
-		});
-  }).catch(next);
+})
+.catch(next);
+  // // res.send("Working GET ALL");
+  // var onePage = Page.findOne({
+  //   where: {
+  //     urlTitle: req.params.urlTitle
+  //   }
+  // })
+	//
+	// var author = onePage.then(function(value){
+	// 	// console.log("valueid", value.id)
+	// 	return User.findOne({
+	// 		where: {
+	// 			id: value.id
+	// 		}
+	// 	})
+	// }).then(function(value){
+	// 	console.log(value)
+	// 	// console.log(author)
+	// })
+	//
+	// console.log(onePage)
+	// console.log(author)
+	// // Promise.all([onePage, author]).then(function(values){
+	// 	page = values[0];
+	// 	user = values[1];
+	// }).catch(next);
+
+
+	// .then(function(page) {
+  //   // res.json(page);
+	// 	res.render('wikipage', {
+	// 		page: page,
+	// 		title: page.title,
+	// 		urlTitle: page.urlTitle,
+	// 		content: page.content
+	// 	});
+  // }).catch(next);
 
   // res.send(req.params.urlTitle);
   // res.redirect("/");
