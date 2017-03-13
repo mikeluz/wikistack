@@ -8,6 +8,7 @@ var routes = require('./routes');
 var path = require('path');
 // var mime = require('mime');
 var bodyParser = require('body-parser');
+var models = require('./models');
 
 // templating boilerplate setup
 app.engine('html', nunjucks.render); // how to render html templates
@@ -25,7 +26,14 @@ app.use(bodyParser.json()); // would be for AJAX requests
 app.use(express.static(path.join(__dirname, '/public')));
 app.use('/', routes);
 
-// start the server
-app.listen(1337, function(){
-  console.log('listening on port 1337');
-});
+// sync with database
+models.User.sync({})
+.then(function () {
+    return models.Page.sync({})
+})
+.then(function () {
+    app.listen(3000, function () {
+        console.log('Server is listening on port 3000');
+    });
+})
+.catch(console.error);
