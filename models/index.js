@@ -38,8 +38,8 @@ var Page = db.define('page', {
     }
 }, {
     getterMethods: {
-      route: function(page) {
-        return '/wiki/' + page.urlTitle;
+      route: function() {
+        return '/wiki/' + this.urlTitle;
       }
     },
     hooks: {
@@ -47,7 +47,7 @@ var Page = db.define('page', {
         page.urlTitle = generateUrlTitle(page.title);
       }
     }
-  });
+});
 
 var User = db.define('user', {
     name: {

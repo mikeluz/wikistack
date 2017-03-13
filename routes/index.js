@@ -1,11 +1,16 @@
 'use strict';
 var express = require('express');
 var router = express.Router();
+var models = require('../models');
+var Page = models.Page;
+var User = models.User;
 
 router.get('/', function(req, res) {
-	console.log('hello');
-	res.render('index');
-	// res.render('index', { title: title });
+	Page.findAll({ }).then(function(pages){
+		res.render('index', {
+			pages: pages,
+		});
+	})
 });
 
 module.exports = router;
