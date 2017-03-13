@@ -14,6 +14,26 @@ wikiRouter.get('/', function(req, res) {
 	res.redirect('/');
 });
 
+wikiRouter.get('/search', function(req, res) {
+  var tags = req.query.tags;
+  if (tags) {
+    Page.findByTag(tags).then(function(result) {
+      console.log(result);
+      if (result.length > 0) {
+        res.render('tagsearch', {
+          tags: result[0].tags
+        });
+      } else {
+        res.render('tagsearch', {
+          error: "No matches were found"
+        });
+      }
+    }).catch();
+  } else {
+    res.render('tagsearch'); 
+  }
+});
+
 wikiRouter.post('/', function(req, res, next) {
 	// 	res.json(req.body);
 
@@ -22,9 +42,11 @@ wikiRouter.post('/', function(req, res, next) {
     email: req.body.author_email
   }}).then(function(result) {
     // console.log(result[0].dataValues.id);
+    console.log(req.body);
     var page = Page.build({
         title: req.body.title,
         content: req.body.content,
+        tags: req.body.tags.split(" "),
         status: req.body.status,
         authorId: result[0].dataValues.id
     }).save().then(function(newPage) {
@@ -57,45 +79,6 @@ wikiRouter.get('/:urlTitle', function(req, res, next) {
     }
 })
 .catch(next);
-  // // res.send("Working GET ALL");
-  // var onePage = Page.findOne({
-  //   where: {
-  //     urlTitle: req.params.urlTitle
-  //   }
-  // })
-	//
-	// var author = onePage.then(function(value){
-	// 	// console.log("valueid", value.id)
-	// 	return User.findOne({
-	// 		where: {
-	// 			id: value.id
-	// 		}
-	// 	})
-	// }).then(function(value){
-	// 	console.log(value)
-	// 	// console.log(author)
-	// })
-	//
-	// console.log(onePage)
-	// console.log(author)
-	// // Promise.all([onePage, author]).then(function(values){
-	// 	page = values[0];
-	// 	user = values[1];
-	// }).catch(next);
-
-
-	// .then(function(page) {
-  //   // res.json(page);
-	// 	res.render('wikipage', {
-	// 		page: page,
-	// 		title: page.title,
-	// 		urlTitle: page.urlTitle,
-	// 		content: page.content
-	// 	});
-  // }).catch(next);
-
-  // res.send(req.params.urlTitle);
-  // res.redirect("/");
 });
 
 module.exports = wikiRouter;

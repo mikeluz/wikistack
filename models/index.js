@@ -35,12 +35,28 @@ var Page = db.define('page', {
     date: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
-    }
+    },
+    tags: {
+        type: Sequelize.ARRAY(Sequelize.TEXT)
+    },
 }, {
+    classMethods: {
+        findByTag: function(tags) {
+           return Page.findAll({
+        // $overlap matches a set of possibilities
+                where : {
+                    tags: {
+                        $overlap: [tags]
+                    }
+                }
+            });   
+        }
+    },
     getterMethods: {
       route: function() {
         return '/wiki/' + this.urlTitle;
       }
+
     },
     hooks: {
       beforeValidate: function(page){
