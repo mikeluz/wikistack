@@ -40,7 +40,7 @@ var User = db.define('user', {
     },
     email: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
         validate: {
             isEmail: true
         }

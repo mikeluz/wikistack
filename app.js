@@ -3,7 +3,11 @@ var express = require('express');
 var app = express();
 var morgan = require('morgan');
 var nunjucks = require('nunjucks');
+
+// routers
 var routes = require('./routes');
+var wikiRouter = require('./routes/wiki');
+
 // var fs = require('fs');
 var path = require('path');
 // var mime = require('mime');
@@ -25,6 +29,7 @@ app.use(bodyParser.json()); // would be for AJAX requests
 // static and dynamic routing
 app.use(express.static(path.join(__dirname, '/public')));
 app.use('/', routes);
+app.use('/wiki', wikiRouter);
 
 // sync with database
 models.User.sync({})
