@@ -32,9 +32,9 @@ app.use('/', routes);
 app.use('/wiki', wikiRouter);
 
 // sync with database
-models.User.sync({})
+models.User.sync({ force: false })
 .then(function () {
-    return models.Page.sync({})
+    return models.Page.sync({ force: false })
 })
 .then(function () {
     app.listen(3000, function () {
