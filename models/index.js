@@ -38,17 +38,16 @@ var Page = db.define('page', {
     }
 }, {
     getterMethods: {
-      route: function() {
-        return '/wiki/' + this.urlTitle;
+      route: function(page) {
+        return '/wiki/' + page.urlTitle;
       }
-    }, {
+    },
     hooks: {
-      beforeValidate: function(){
-        this.urlTitle = generateUrlTitle(this.title);
+      beforeValidate: function(page){
+        page.urlTitle = generateUrlTitle(page.title);
       }
     }
-  }
-});
+  });
 
 var User = db.define('user', {
     name: {
