@@ -5,6 +5,17 @@ var db = new Sequelize('postgres://localhost:5432/wikistack');
 //     logging: false
 // });
 
+function generateUrlTitle (title) {
+  if (title) {
+    // Removes all non-alphanumeric characters from title
+    // And make whitespace underscore
+    return title.replace(/\s+/g, '_').replace(/\W/g, '');
+  } else {
+    // Generates random 5 letter string
+    return Math.random().toString(36).substring(2, 7);
+  }
+}
+
 var Page = db.define('page', {
     title: {
         type: Sequelize.STRING,
@@ -26,9 +37,15 @@ var Page = db.define('page', {
         defaultValue: Sequelize.NOW
     }
 }, {
-  getterMethods: {
-    route: function() {
-      return '/wiki/' + this.urlTitle;
+    getterMethods: {
+      route: function() {
+        return '/wiki/' + this.urlTitle;
+      }
+    }, {
+    hooks: {
+      beforeValidate: function(){
+        this.urlTitle = generateUrlTitle(this.title);
+      }
     }
   }
 });
